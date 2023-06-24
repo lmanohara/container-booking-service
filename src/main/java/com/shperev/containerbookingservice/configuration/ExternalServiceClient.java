@@ -2,9 +2,7 @@ package com.shperev.containerbookingservice.configuration;
 
 import com.shperev.containerbookingservice.model.ExternalAPIResponse;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
