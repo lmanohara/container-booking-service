@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 @Component
 public class BookingsServiceImpl implements BookingsService {
@@ -27,17 +28,16 @@ public class BookingsServiceImpl implements BookingsService {
 
     @Override
     public Mono<AvailableSpacesResponse> checkAvailableSpaces(@NonNull BookingsSpec bookingsSpec) {
-        ExternalAPIResponse externalAPIResponse = externalServiceClient.callExternalAPI("/checkAvailable");
-
-        Boolean availability = Optional.of(externalAPIResponse).map(this::checkAvailability).orElseThrow();
-        AvailableSpacesResponse availableSpacesResponse = new AvailableSpacesResponse();
-        availableSpacesResponse.setAvailable(availability);
-
-        return Mono.just(availableSpacesResponse);
+        Mono<ExternalAPIResponse> externalAPIResponseMono = externalServiceClient.callExternalAPI("/checkAvailable");
+        return externalAPIResponseMono.map(this::mapToAvailableSpanceResponse);
     }
 
-    private boolean checkAvailability(ExternalAPIResponse externalAPIResponse) {
-        return externalAPIResponse.getAvailableSpace() != 0;
+    private AvailableSpacesResponse mapToAvailableSpanceResponse(ExternalAPIResponse externalAPIResponse) {
+        AvailableSpacesResponse availableSpacesResponse = new AvailableSpacesResponse();
+        boolean isSpaceAvailable = externalAPIResponse.getAvailableSpace() > 0;
+        availableSpacesResponse.setAvailable(isSpaceAvailable);
+
+        return availableSpacesResponse;
     }
 
     @Override

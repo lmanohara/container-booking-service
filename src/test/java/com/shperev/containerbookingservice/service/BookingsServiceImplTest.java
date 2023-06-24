@@ -34,7 +34,7 @@ class BookingsServiceImplTest {
     void givenBookingSpecification_whenSpacesAvailable_thenShouldReturnTrue() {
         BookingsSpec bookingsSpec = TestUtil.buildBookingSpec("957000002", Instant.now().toString());
         ExternalAPIResponse externalAPIResponse = TestUtil.buildExternalAPIResponse(10);
-        when(externalServiceClient.callExternalAPI("/checkAvailable")).thenReturn(externalAPIResponse);
+        when(externalServiceClient.callExternalAPI("/checkAvailable")).thenReturn(Mono.just(externalAPIResponse));
         Mono<AvailableSpacesResponse> availableSpacesMono = bookingsService.checkAvailableSpaces(bookingsSpec);
 
         StepVerifier.create(availableSpacesMono).
@@ -45,7 +45,7 @@ class BookingsServiceImplTest {
     void givenBookingSpecification_whenSpacesAreNotAvailable_thenShouldReturnFalse() {
         BookingsSpec bookingsSpec = TestUtil.buildBookingSpec("957000002", Instant.now().toString());
         ExternalAPIResponse externalAPIResponse = TestUtil.buildExternalAPIResponse(0);
-        when(externalServiceClient.callExternalAPI("/checkAvailable")).thenReturn(externalAPIResponse);
+        when(externalServiceClient.callExternalAPI("/checkAvailable")).thenReturn(Mono.just(externalAPIResponse));
         Mono<AvailableSpacesResponse> availableSpacesMono = bookingsService.checkAvailableSpaces(bookingsSpec);
 
         StepVerifier.create(availableSpacesMono).
