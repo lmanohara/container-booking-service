@@ -5,7 +5,6 @@ import com.shperev.containerbookingservice.model.BookingsRef;
 import com.shperev.containerbookingservice.model.BookingsSpec;
 import reactor.core.publisher.Mono;
 
-
 public interface BookingsService {
     /**
      * The method will check available spaces

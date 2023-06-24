@@ -1,17 +1,15 @@
 package com.shperev.containerbookingservice.model;
 
 
+import lombok.Builder;
+import lombok.Value;
+
 /**
  * The model class for checking available spaces
  */
+
+@Value
+@Builder
 public class AvailableSpacesResponse {
-    private Boolean available;
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(Boolean available) {
-        this.available = available;
-    }
+    Boolean availability;
 }

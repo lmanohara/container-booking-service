@@ -1,5 +1,7 @@
 package com.shperev.containerbookingservice.e2e;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shperev.containerbookingservice.ContainerBookingServiceApplication;
 import com.shperev.containerbookingservice.TestUtil;
@@ -13,44 +15,46 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = ContainerBookingServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+    classes = ContainerBookingServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CheckAvailableIntegrationTest {
 
-    @LocalServerPort
-    private int port;
+  @LocalServerPort private int port;
 
+  @Test
+  void givenBookingSpec_whenExternalApiResponse_thenShouldResponseBackAvailability()
+      throws Exception {
+    TestRestTemplate restTemplate = new TestRestTemplate();
 
-    @Test
-    void givenBookingSpec_whenExternalApiResponse_thenShouldResponseBackAvailability() throws Exception {
-        TestRestTemplate restTemplate = new TestRestTemplate();
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+    BookingsSpec bookingsSpec = TestUtil.buildBookingSpec(null, null);
 
-        BookingsSpec bookingsSpec = TestUtil.buildBookingSpec(null, null);
+    ObjectMapper objectMapper = new ObjectMapper();
+    String jsonString = objectMapper.writeValueAsString(bookingsSpec);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonString = objectMapper.writeValueAsString(bookingsSpec);
+    HttpEntity<String> entity = new HttpEntity<>(jsonString, headers);
 
-        HttpEntity<String> entity = new HttpEntity<>(jsonString, headers);
+    ResponseEntity<String> response =
+        restTemplate.exchange(
+            createURLWithPort("/api/bookings/checkAvailable"),
+            HttpMethod.POST,
+            entity,
+            String.class);
 
-        ResponseEntity<String> response = restTemplate.exchange(
-                createURLWithPort("/api/bookings/checkAvailable"),
-                HttpMethod.POST, entity, String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isNotNull();
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotNull();
+    AvailableSpacesResponse availableSpacesResponse =
+        objectMapper.readValue(response.getBody(), AvailableSpacesResponse.class);
 
-        AvailableSpacesResponse availableSpacesResponse = objectMapper.readValue(response.getBody(), AvailableSpacesResponse.class);
+    assertThat(availableSpacesResponse.getAvailability()).isTrue();
+  }
 
-        assertThat(availableSpacesResponse.isAvailable()).isTrue();
-    }
-
-
-    public String createURLWithPort(String uri) {
-        return "http://localhost:" + port + uri;
-    }
+  public String createURLWithPort(String uri) {
+    return "http://localhost:" + port + uri;
+  }
 }

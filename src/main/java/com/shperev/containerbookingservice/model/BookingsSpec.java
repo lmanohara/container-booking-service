@@ -2,13 +2,11 @@ package com.shperev.containerbookingservice.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
-
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
-
 
 /**
  * The model for container booking specification
@@ -38,6 +36,7 @@ public class BookingsSpec {
     private int quantity;
     @Column("timestamp")
     private String timestamp;
+
     public BookingsSpec(ContainerType containerType, int containerSize, String origin, String destination, int quantity) {
         this.containerType = containerType;
         this.containerSize = containerSize;

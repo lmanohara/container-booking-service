@@ -7,27 +7,22 @@ import com.shperev.containerbookingservice.model.ExternalAPIResponse;
 
 public class TestUtil {
 
-    public static BookingsSpec buildBookingSpec(String bookingRef, String timestamp) {
-        BookingsSpec bookingsSpec = new BookingsSpec(ContainerType.DRY, 10,
-                "Australia", "Singapore", 5);
-        bookingsSpec.setBookingRef(bookingRef);
-        bookingsSpec.setTimestamp(timestamp);
+  public static BookingsSpec buildBookingSpec(String bookingRef, String timestamp) {
+    BookingsSpec bookingsSpec =
+        new BookingsSpec(ContainerType.DRY, 10, "Australia", "Singapore", 5);
+    bookingsSpec.setBookingRef(bookingRef);
+    bookingsSpec.setTimestamp(timestamp);
 
-        return bookingsSpec;
-    }
+    return bookingsSpec;
+  }
 
-    public static AvailableSpacesResponse buildAvailableSpaces(Boolean available) {
+  public static AvailableSpacesResponse buildAvailableSpaces(Boolean available) {
+    return AvailableSpacesResponse.builder().availability(available).build();
+  }
 
-        AvailableSpacesResponse availableSpacesResponse = new AvailableSpacesResponse();
-        availableSpacesResponse.setAvailable(available);
-
-        return availableSpacesResponse;
-    }
-
-    public static ExternalAPIResponse buildExternalAPIResponse(Integer availableSpaces) {
-        ExternalAPIResponse externalAPIResponse = new ExternalAPIResponse();
-        externalAPIResponse.setAvailableSpace(availableSpaces);
-        return externalAPIResponse;
-    }
-
+  public static ExternalAPIResponse buildExternalAPIResponse(Integer availableSpaces) {
+    ExternalAPIResponse externalAPIResponse = new ExternalAPIResponse();
+    externalAPIResponse.setAvailableSpace(availableSpaces);
+    return externalAPIResponse;
+  }
 }
