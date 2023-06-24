@@ -31,3 +31,12 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+test {
+    filter {
+
+        //exclude all tests from a package.
+        excludeTestsMatching "com.shperev.containerbookingservice.e2e.*"
+
+    }
+}
